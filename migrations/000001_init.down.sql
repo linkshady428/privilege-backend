@@ -1,0 +1,18 @@
+DROP TABLE IF EXISTS reports;
+DROP TABLE IF EXISTS blocks;
+DROP TABLE IF EXISTS messages;
+DROP TABLE IF EXISTS matches;
+DROP TABLE IF EXISTS invitations;
+DROP TABLE IF EXISTS passes;
+DROP TABLE IF EXISTS refresh_tokens;
+DROP TABLE IF EXISTS photos;
+DROP TABLE IF EXISTS users;
+
+DROP TYPE IF EXISTS report_reason;
+DROP TYPE IF EXISTS invitation_status;
+DROP TYPE IF EXISTS relationship_status;
+DROP TYPE IF EXISTS sex_type;
+DROP TYPE IF EXISTS user_tier;
+
+DROP EXTENSION IF EXISTS "uuid-ossp";
+DROP EXTENSION IF EXISTS postgis;
