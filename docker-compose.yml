@@ -12,15 +12,28 @@ services:
       interval: 5s
       retries: 5
 
+  migrate:
+    image: migrate/migrate
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./migrations:/migrations
+    command:
+      - "-path=/migrations"
+      - "-database=postgres://postgres:postgres@db:5432/privilege?sslmode=disable"
+      - "up"
   server:
     build: .
     depends_on:
       db:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     environment:
-      DATABASE_URL: postgres://postgres:postgres@db:5432/privilege?sslmode=disable
-      JWT_SECRET: local-dev-secret
-      PORT: "8080"
-      SKIP_AUTH: "false"
+     DATABASE_URL: ${DATABASE_URL}
+     JWT_SECRET: ${JWT_SECRET}
+     PORT: ${PORT}
+     SKIP_AUTH: ${SKIP_AUTH}
     ports:
       - "8080:8080"

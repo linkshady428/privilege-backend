@@ -1,19 +1,20 @@
 package router
 
 import (
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
 	"github.com/privilege/backend/internal/config"
 	"github.com/privilege/backend/internal/handler"
 	mw "github.com/privilege/backend/internal/middleware"
 )
 
-func Register(e *echo.Echo, cfg *config.Config) {
+func Register(e *echo.Echo, cfg *config.Config, pool *pgxpool.Pool) {
 	e.GET("/health", handler.Health)
 
 	v1 := e.Group("/api/v1")
 
 	// --- Public: Auth ---
-	auth := handler.NewAuthHandler()
+	auth := handler.NewAuthHandler(pool, cfg.JWTSecret)
 	v1.POST("/auth/register", auth.Register)
 	v1.POST("/auth/login", auth.Login)
 	v1.POST("/auth/refresh", auth.Refresh)
@@ -23,7 +24,7 @@ func Register(e *echo.Echo, cfg *config.Config) {
 	protected := v1.Group("", mw.JWT(cfg))
 
 	// Users
-	users := handler.NewUserHandler()
+	users := handler.NewUserHandler(pool)
 	protected.GET("/users/me", users.GetMe)
 	protected.PUT("/users/me", users.UpdateMe)
 	protected.DELETE("/users/me", users.DeleteMe)
@@ -31,8 +32,8 @@ func Register(e *echo.Echo, cfg *config.Config) {
 	protected.DELETE("/users/me/photos/:photoID", users.DeletePhoto)
 	protected.PUT("/users/me/location", users.UpdateLocation)
 
-	// Feed — tier-aware; enforcement inside handler for GET, privilege-only for POST
-	feed := handler.NewFeedHandler()
+	// Feed
+	feed := handler.NewFeedHandler(pool)
 	protected.GET("/feed", feed.GetFeed)
 	protected.POST("/feed/pass/:userID", feed.PassUser, mw.RequireTier("privilege"))
 
@@ -51,7 +52,7 @@ func Register(e *echo.Echo, cfg *config.Config) {
 	protected.GET("/chats/:matchID/messages", chat.GetMessages)
 	protected.POST("/chats/:matchID/messages", chat.SendMessage)
 
-	// WebSocket — note: path outside /api/v1 intentionally
+	// WebSocket — path intentionally outside /api/v1
 	ws := handler.NewWSHandler()
 	e.GET("/ws/chat/:matchID", ws.Connect, mw.JWT(cfg))
 
