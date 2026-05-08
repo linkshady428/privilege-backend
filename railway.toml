@@ -2,7 +2,7 @@
 builder = "dockerfile"
 
 [deploy]
-preDeployCommand = "migrate -verbose -path /app/migrations -database \"$DATABASE_URL\" up"
+preDeployCommand = "sh -c 'migrate -verbose -path /app/migrations -database $DATABASE_URL?sslmode=disable up'"
 startCommand = "./server"
 healthcheckPath = "/health"
 healthcheckTimeout = 30
