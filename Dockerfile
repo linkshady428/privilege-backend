@@ -3,8 +3,9 @@ WORKDIR /app
 
 # Download golang-migrate CLI for use in Railway's releaseCommand
 RUN wget -q https://github.com/golang-migrate/migrate/releases/download/v4.18.1/migrate.linux-amd64.tar.gz \
-    && tar -xzf migrate.linux-amd64.tar.gz
-
+    && tar -xzf migrate.linux-amd64.tar.gz \
+    && mv migrate /usr/local/bin/migrate \
+    && chmod +x /usr/local/bin/migrate
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .

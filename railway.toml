@@ -2,7 +2,7 @@
 builder = "dockerfile"
 
 [deploy]
-releaseCommand = "migrate -path /app/migrations -database $DATABASE_URL up"
+releaseCommand = "ls -la /app && which migrate && migrate -version && migrate -path /app/migrations -database $DATABASE_URL up"
 startCommand = "./server"
 healthcheckPath = "/health"
 healthcheckTimeout = 30
