@@ -1,5 +1,3 @@
--- Enable PostGIS for geohash / radius queries
-CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Enum types
@@ -24,7 +22,8 @@ CREATE TABLE users (
     relationship_status relationship_status,
     lifestyle_tags TEXT[] NOT NULL DEFAULT '{}',
     tier          user_tier NOT NULL DEFAULT 'free',
-    location      GEOGRAPHY(Point, 4326),      -- lat/lng stored as PostGIS point
+    latitude      DECIMAL(9,6),
+    longitude     DECIMAL(9,6),
     geohash       TEXT,                        -- for fast radius queries
     city          TEXT,
     agree_tos     BOOLEAN NOT NULL DEFAULT FALSE,

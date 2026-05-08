@@ -133,6 +133,6 @@ func (h *UserHandler) UpdateLocation(c echo.Context) error {
 	if err := c.Bind(&req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	// TODO: reverse-geocode to city, store geohash + PostGIS point
+	// TODO: reverse-geocode to city, store latitude/longitude + geohash
 	return c.JSON(http.StatusOK, echo.Map{"message": "location updated"})
 }
