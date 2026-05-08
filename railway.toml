@@ -2,7 +2,7 @@
 builder = "dockerfile"
 
 [deploy]
-preDeployCommand = "sh -c 'echo PRE_DEPLOY_CALLED && exit 1'"
+preDeployCommand = "migrate -verbose -path /app/migrations -database \"$DATABASE_URL\" up"
 startCommand = "./server"
 healthcheckPath = "/health"
 healthcheckTimeout = 30
