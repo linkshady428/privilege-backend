@@ -2,7 +2,7 @@
 builder = "dockerfile"
 
 [deploy]
-releaseCommand = "exit 1"
+releaseCommand = "false"
 startCommand = "./server"
 healthcheckPath = "/health"
 healthcheckTimeout = 30
